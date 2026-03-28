@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+        #video-container { position: relative; width: 100vw; height: 100vh; display: none; }
+        iframe { width: 100%; height: 100%; border: none; background: black; }
+        #toggle-btn { position: absolute; bottom: 85px; right: 20px; background: #9147ff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; z-index: 9999; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <button id="toggle-btn">Увімкнути Extended View</button>
+    <div id="video-container"><iframe id="overlay-frame" allow="autoplay; fullscreen"></iframe></div>
+    <script src="viewer.js"></script>
+</body>
+</html>
