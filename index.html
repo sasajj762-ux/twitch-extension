@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secret Stream Access</title>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <style>
+        body { margin: 0; background: #000; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        video { width: 80%; border: 2px solid #9147ff; border-radius: 8px; margin-top: 10px; background: #111; }
+        #toggle-btn { padding: 15px 30px; font-size: 18px; cursor: pointer; background: #9147ff; color: white; border: none; border-radius: 5px; font-weight: bold; }
+        #status { margin-bottom: 10px; color: #aaa; }
+    </style>
+</head>
+<body>
+
+    <div id="status">Очікування підключення до стрімера...</div>
+    <button id="toggle-btn" style="display:none;">Увімкнути Секретний Вид</button>
+    
+    <video id="main-video" autoplay playsinline controls></video>
+    
+    <video id="secret-video" style="display:none;" autoplay playsinline controls></video>
+
+    <script>
+        const peer = new Peer(); // Створюємо ID глядача
+        const mainVideo = document.getElementById('main-video');
+        const secretVideo = document.getElementById('secret-video');
+        const btn = document.getElementById('toggle-btn');
+        const status = document.getElementById('status');
+
+        // ТУТ ВПИШИ СВІЙ ID (вигадай будь-яке слово, наприклад "my-secret-stream-777")
+        const streamerId = 'TVOY_UNIQUE_ID_HERE'; 
+
+        peer.on('open', (id) => {
+            console.log('Мій ID глядача: ' + id);
+            // Намагаємось підключитися до тебе
+            const conn = peer.connect(streamerId);
+            
+            conn.on('open', () => {
+                status.innerText = "Підключено! Чекаємо на потік...";
+                btn.style.display = "block";
+            });
+        });
+
+        // Отримуємо відео-потоки
+        peer.on('call', (call) => {
+            call.answer();
+            call.on('stream', (remoteStream) => {
+                // Визначаємо який це потік (можна додати метадані, але для простоти - перший буде секретним)
+                secretVideo.srcObject = remoteStream;
+            });
+        });
+
+        btn.onclick = () => {
+            if (secretVideo.style.display === 'none') {
+                secretVideo.style.display = 'block';
+                mainVideo.style.display = 'none';
+                btn.innerText = 'Повернутись до звичайного виду';
+            } else {
+                secretVideo.style.display = 'none';
+                mainVideo.style.display = 'block';
+                btn.innerText = 'Увімкнути Секретний Вид';
+            }
+        };
+    </script>
+</body>
+</html>
